@@ -1,3 +1,6 @@
+import network
+
+
 class gpio:
     def __init__(self):
         self._D0 = 16
@@ -55,3 +58,66 @@ class gpio:
     @property
     def SDD2(self):
         return self._SDD2
+
+
+class wifi:
+    def __init__(self, ssid=None, password=None):
+        """
+        初始化Wifi模組
+        ssid:WIFI名稱
+        password:WIFI密碼
+        """
+        self.sta = network.WLAN(network.STA_IF)  # 初始化STA
+        self.ap = network.WLAN(network.AP_IF)
+        self.ssid = ssid
+        self.password = password
+        self.ap_active = False
+        self.sta_active = False
+        self.ip = None
+
+    def setup(self, ap_active=False, sta_active=False):
+        """
+        設定Wifi模組
+        ap_active:是否開啟AP模式
+        sta_active:是否開啟STA模式
+        使用方法:
+        wi.setup(ap_active=True|False, sta_active=True|False)
+        """
+        self.ap_active = ap_active
+        self.sta_active = sta_active
+        self.ap.active(ap_active)
+        self.sta.active(sta_active)
+
+    def scan(self):
+        """
+        搜尋WIFI
+        返回:WIFI列表
+        使用方法:
+        wi.scan()
+        """
+        if self.sta_active:
+            wifi_list = self.sta.scan()
+            print("Scan result:")
+            for i in range(len(wifi_list)):
+                print(wifi_list[i][0])
+        else:
+            print("STA模式未啟用")
+
+    def connect(self, ssid=None, password=None) -> bool:
+        ssid = ssid if ssid is not None else self.ssid
+        password = password if password is not None else self.password
+        print(f"SSID={ssid}, password={password}")
+        if not self.sta_active:
+            print("STA模式未啟用")
+            return False
+        if ssid is None or password is None:
+            print("WIFI名稱或密碼未設定")
+            return False
+        if self.sta_active:
+            self.sta.connect(ssid, password)
+            while not (self.sta.isconnected()):  # 判斷沒成功
+                print("你是笨蛋")
+                pass
+            self.ip = self.sta.ifconfig()[0]
+            print("connct successfully", self.sta.ifconfig())
+            return True
