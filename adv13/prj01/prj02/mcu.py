@@ -176,12 +176,27 @@ class LED:
             當 pwm=True 時，使用 PWM 控制 LED。
         """
         if pwm == False:
-            self.RED = Pin(r_pin, Pin.OUT)
-            self.GREEN = Pin(g_pin, Pin.OUT)
-            self.BLUE = Pin(b_pin, Pin.OUT)
+            self.RED = Pin(gpio.D5, Pin.OUT)
+            self.GREEN = Pin(gpio.D6, Pin.OUT)
+            self.BLUE = Pin(gpio.D7, Pin.OUT)
         else:
             frequency = 1000
             duty_cycle = 0
-            self.RED = PWM(Pin(r_pin), freq=frequency, duty=duty_cycle)
-            self.GREEN = PWM(Pin(g_pin), freq=frequency, duty=duty_cycle)
-            self.BLUE = PWM(Pin(b_pin), freq=frequency, duty=duty_cycle)
+            self.RED = PWM(Pin(gpio.D5), freq=frequency, duty=duty_cycle)
+            self.GREEN = PWM(Pin(gpio.D6), freq=frequency, duty=duty_cycle)
+            self.BLUE = PWM(Pin(gpio.D7), freq=frequency, duty=duty_cycle)
+class MQTT:
+    def __init__(self, client_id, server, user, password, keepalive):
+        self.client_id = client_id
+        self.server = server
+        self.user = user
+        self.password = password
+        self.keepalive = keepalive
+        self.client=MQTTClient(
+            self.client_id, self.server, user=self.user, password=self.password, keepalive=self.keepalive
+        )
+    def connect(self):
+
+    def subscribe(self,topic:str,callback:function):
+
+    def check_msg(self):

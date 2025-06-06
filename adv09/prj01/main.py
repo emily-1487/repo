@@ -2,7 +2,7 @@
 import mcu
 
 ################宣告與設定################
-wi = mcu.wifi("Daniel", "A1234567890")
+wi = mcu.wifi("little maker", "22756177")
 # wi = mcu.wifi()
 wi.setup(ap_active=False, sta_active=True)
 
